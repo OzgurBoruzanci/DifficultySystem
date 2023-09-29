@@ -6,12 +6,15 @@ using UnityEngine;
 public class HardState : DifficultyState
 {
     [SerializeField]
-    DifficultyScriptableObject _difficultyScriptableObject;
+    StateMachineScriptableObject _stateMachineScriptableObject;
     DifficultyState _easyState;
 
-    int _maxValue;
-    int _minValue;
-    float _coefficient = 2f;
+    [SerializeField] int _maxValue;
+    [SerializeField] int _minValue;
+    [SerializeField] float _coefficient = 3f;
+
+    bool _hard = true;
+
     private void OnEnable()
     {
         EventManager.DifficultyStateEasy += DifficultyStateEasy;
@@ -31,8 +34,12 @@ public class HardState : DifficultyState
         {
             return _easyState;
         }
-        _difficultyScriptableObject.maxValue = (int)Math.Round(_maxValue * _coefficient);
-        _difficultyScriptableObject.minValue = (int)Math.Round(_minValue * _coefficient);
+        if (_hard)
+        {
+            _hard=false;
+            _maxValue = (int)Math.Round(_maxValue * _coefficient);
+            _minValue = (int)Math.Round(_minValue * _coefficient);
+        }
         return this;
     }
 
@@ -40,8 +47,9 @@ public class HardState : DifficultyState
     void Start()
     {
         EventManager.DifficultyStateHard(this);
-        _maxValue = _difficultyScriptableObject.maxValue;
-        _minValue = _difficultyScriptableObject.minValue;
+        _maxValue = _stateMachineScriptableObject.maxValue;
+        _minValue = _stateMachineScriptableObject.minValue;
+        _coefficient = _stateMachineScriptableObject.hardCoefficient;
     }
 
     

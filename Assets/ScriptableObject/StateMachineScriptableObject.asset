@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2639c73036b1cea4ca6df5f36f035a95, type: 3}
-  m_Name: DifficultyScriptableObject
+  m_Script: {fileID: 11500000, guid: 4450f484aa2c15e4db3509fea6632012, type: 3}
+  m_Name: StateMachineScriptableObject
   m_EditorClassIdentifier: 
-  maxValue: 5
-  minValue: -5
   normalDifficultyTime: 180
-  hardDifficultyTime: 160
-  easyCoefficient: 1
+  hardDifficultyTime: 60
   normalCoefficient: 2
   hardCoefficient: 3
+  maxValue: 5
+  minValue: -5
+  maxAirCapacity: 100

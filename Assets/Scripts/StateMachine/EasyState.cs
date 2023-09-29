@@ -5,12 +5,13 @@ using UnityEngine;
 public class EasyState : DifficultyState
 {
     [SerializeField]
-    DifficultyScriptableObject _difficultyScriptableObject;
+    StateMachineScriptableObject _stateMachineScriptableObject;
     DifficultyState _normalState;
 
-    int _maxValue;
-    int _minValue;
-
+    [SerializeField]int _maxValue;
+    [SerializeField] int _minValue;
+    int _normalDifficultyTime;
+    
     private void OnEnable()
     {
         EventManager.DifficultyStateNormal += DifficultyStateNormal;
@@ -26,12 +27,10 @@ public class EasyState : DifficultyState
 
     public override DifficultyState DifficultySituation(TimerManager timer)
     {
-        if (timer.timeRemaining <= 180f)
+        if (timer.timeRemaining <= _normalDifficultyTime)
         {
             return _normalState;
         }
-        _difficultyScriptableObject.maxValue = _maxValue;
-        _difficultyScriptableObject.minValue= _minValue;
         return this;
     }
 
@@ -39,8 +38,9 @@ public class EasyState : DifficultyState
     void Start()
     {
         EventManager.DifficultyStateEasy(this);
-        _maxValue = _difficultyScriptableObject.maxValue;
-        _minValue = _difficultyScriptableObject.minValue;
+        _maxValue = _stateMachineScriptableObject.maxValue;
+        _minValue = _stateMachineScriptableObject.minValue;
+        _normalDifficultyTime = _stateMachineScriptableObject.normalDifficultyTime;
     }
 
     

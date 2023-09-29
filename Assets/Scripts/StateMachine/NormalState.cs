@@ -6,12 +6,17 @@ using UnityEngine;
 public class NormalState : DifficultyState
 {
     [SerializeField]
-    DifficultyScriptableObject _difficultyScriptableObject;
+    StateMachineScriptableObject _stateMachineScriptableObject;
     DifficultyState _hardState;
 
-    int _maxValue;
-    int _minValue;
-    float _coefficient = 1.5f;
+    [SerializeField] int _maxValue;
+    [SerializeField] int _minValue;
+    int _hardDifficultyTime;
+
+    bool _normal = true;
+
+    [SerializeField] float _coefficient = 2f;
+
     private void OnEnable()
     {
         EventManager.DifficultyStateHard += DifficultyStateHard;
@@ -27,12 +32,16 @@ public class NormalState : DifficultyState
 
     public override DifficultyState DifficultySituation(TimerManager timer)
     {
-        if (timer.timeRemaining <= 60f)
+        if (timer.timeRemaining <= _hardDifficultyTime)
         {
             return _hardState;
         }
-        _difficultyScriptableObject.maxValue = (int)Math.Round(_maxValue * _coefficient);
-        _difficultyScriptableObject.minValue = (int)Math.Round(_minValue * _coefficient);
+        if (_normal)
+        {
+            _normal = false;
+            _maxValue = (int)Math.Round(_maxValue * _coefficient);
+            _minValue = (int)Math.Round(_minValue * _coefficient);
+        }
         return this;
     }
 
@@ -40,8 +49,10 @@ public class NormalState : DifficultyState
     void Start()
     {
         EventManager.DifficultyStateNormal(this);
-        _maxValue = _difficultyScriptableObject.maxValue;
-        _minValue = _difficultyScriptableObject.minValue;
+        _maxValue = _stateMachineScriptableObject.maxValue;
+        _minValue = _stateMachineScriptableObject.minValue;
+        _hardDifficultyTime = _stateMachineScriptableObject.hardDifficultyTime;
+        _coefficient = _stateMachineScriptableObject.normalCoefficient;
     }
 
 }
