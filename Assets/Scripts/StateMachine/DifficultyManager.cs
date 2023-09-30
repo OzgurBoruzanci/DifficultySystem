@@ -8,13 +8,6 @@ public class DifficultyManager : MonoBehaviour
     [SerializeField] DifficultyState _currentState;
     [SerializeField] TimerManager timerManager;
    
-    
-    void Start()
-    {
-        
-    }
-
-    
     void Update()
     {
         DifficultyStateMachine();
