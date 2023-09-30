@@ -5,42 +5,29 @@ using UnityEngine;
 
 public class NormalState : DifficultyState
 {
-    [SerializeField]
-    StateMachineScriptableObject _stateMachineScriptableObject;
-    DifficultyState _hardState;
-
-    [SerializeField] int _maxValue;
-    [SerializeField] int _minValue;
-    int _hardDifficultyTime;
-
-    bool _normal = true;
-
     [SerializeField] float _coefficient = 2f;
 
     private void OnEnable()
     {
-        EventManager.DifficultyStateHard += DifficultyStateHard;
+        EventManager.DifficultyStateHard += NextDifficultyState;
     }
     private void OnDisable()
     {
-        EventManager.DifficultyStateHard -= DifficultyStateHard;
+        EventManager.DifficultyStateHard -= NextDifficultyState;
     }
-    void DifficultyStateHard(DifficultyState state)
-    {
-        _hardState = state;
-    }
+    
 
     public override DifficultyState DifficultySituation(TimerManager timer)
     {
-        if (timer.timeRemaining <= _hardDifficultyTime)
+        if (timer.timeRemaining <= nextDifficultyTime)
         {
-            return _hardState;
+            return nextState;
         }
-        if (_normal)
+        if (thisState)
         {
-            _normal = false;
-            _maxValue = (int)Math.Round(_maxValue * _coefficient);
-            _minValue = (int)Math.Round(_minValue * _coefficient);
+            thisState = false;
+            maxValue = (int)Math.Round(maxValue * _coefficient);
+            minValue = (int)Math.Round(minValue * _coefficient);
         }
         return this;
     }
@@ -49,10 +36,9 @@ public class NormalState : DifficultyState
     void Start()
     {
         EventManager.DifficultyStateNormal(this);
-        _maxValue = _stateMachineScriptableObject.maxValue;
-        _minValue = _stateMachineScriptableObject.minValue;
-        _hardDifficultyTime = _stateMachineScriptableObject.hardDifficultyTime;
-        _coefficient = _stateMachineScriptableObject.normalCoefficient;
+        StartMethod();
+        nextDifficultyTime = stateMachineScriptableObject.hardDifficultyTime;
+        _coefficient = stateMachineScriptableObject.normalCoefficient;
     }
 
 }
